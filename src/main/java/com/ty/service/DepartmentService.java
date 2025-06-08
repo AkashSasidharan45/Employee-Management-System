@@ -17,14 +17,26 @@ public class DepartmentService {
 
 	// creating department
 	public Department createDepartment(Department department) {
-		return departmentRepository.save(department);
+		try {
+			return departmentRepository.save(department);
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to create department: " + e.getMessage());
+		}
 	}
 
 	// assign department head
 	public Department setDepartmentHead(Department department) {
 
 		Integer deptId = department.getDeptId();
+		if (deptId == null) {
+			throw new IllegalArgumentException("Department ID must not be null.");
+		}
+
 		Integer empId = department.getDeptId() != null ? department.getDeptHead().getEmpId() : null;
+
+		if (empId == null) {
+			throw new IllegalArgumentException("Department Head Employee ID must not be null.");
+		}
 
 		Department department2 = departmentRepository.findById(deptId).orElseThrow();
 		Employee employee = employeeRepository.findById(empId).orElseThrow();

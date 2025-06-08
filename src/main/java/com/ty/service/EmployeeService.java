@@ -25,6 +25,8 @@ public class EmployeeService {
 			Department department = departmentRepository.findById(deptId).orElseThrow();
 			employee.setDepartment(department);
 		} else {
+			throw new IllegalArgumentException(
+					"Department ID must be provided to assign a department to the employee.");
 
 		}
 		// Assigning Reporting Manager
@@ -33,6 +35,7 @@ public class EmployeeService {
 			Employee emp = employeeRepository.findById(repManagerId).orElseThrow();
 			employee.setEmpReportingManger(emp);
 		} else {
+			throw new IllegalArgumentException("Reporting Manager ID must be provided.");
 
 		}
 		return employeeRepository.save(employee);
@@ -84,32 +87,45 @@ public class EmployeeService {
 		if (employee != null && employee.getEmpId() != null) {
 			Employee existingEmployee = employeeRepository.findById(employee.getEmpId()).orElseThrow();
 			employeeRepository.delete(existingEmployee);
+		} else {
+			throw new IllegalArgumentException("Employee or Employee ID must not be null.");
 		}
 
 	}
 
 //get all employee
 	public Iterable<Employee> getAllEmployee() {
-		return employeeRepository.findAll();
+		try {
+			return employeeRepository.findAll();
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to fetch employee data: " + e.getMessage());
+		}
 
 	}
+
 //expand employee
 	public Object expandEmployee(Boolean lookup) {
-		Iterable<Employee> employees = employeeRepository.findAll();
+		try {
 
-		if (Boolean.TRUE.equals(lookup)) {
-			List<Map<String, Object>> listOfexpands = new ArrayList<>();
+			Iterable<Employee> employees = employeeRepository.findAll();
 
-			for (Employee emp : employees) {
-				Map<String, Object> expandedEmployee = new HashMap<String, Object>();
-				expandedEmployee.put("empId", emp.getEmpId());
-				expandedEmployee.put("empName", emp.getEmpName());
-				listOfexpands.add(expandedEmployee);
+			if (Boolean.TRUE.equals(lookup)) {
+				List<Map<String, Object>> listOfexpands = new ArrayList<>();
+
+				for (Employee emp : employees) {
+					Map<String, Object> expandedEmployee = new HashMap<String, Object>();
+					expandedEmployee.put("empId", emp.getEmpId());
+					expandedEmployee.put("empName", emp.getEmpName());
+					listOfexpands.add(expandedEmployee);
+				}
+				return listOfexpands;
+
 			}
-			return listOfexpands;
+			return employees;
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to fetch or expand employees: " + e.getMessage());
 
 		}
-		return employees;
 
 	}
 
