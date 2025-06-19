@@ -30,11 +30,11 @@ A full-featured backend application built with **Spring Boot** to manage employe
 ## 🔌 API Endpoints (Sample)
 
 | Method | Endpoint                        | Description                             |
-|--------|----------------------------------|-----------------------------------------|
-| GET    | `/departments`                  | Get all departments                     |
-| POST   | `/departments`                  | Create a new department                 |
-| GET    | `/employees`                    | Get all employees                       |
-| POST   | `/employees`                    | Create a new employee                   |
+|--------|---------------------------------|-----------------------------------------|
+| GET    | `/department/create`            | Get all departments                     |
+| POST   | `/department/getAllDepartments` | Create a new department                 |
+| GET    | `/employee/getAllEmployee`      | Get all employees                       |
+| POST   | `/employee/create`              | Create a new employee                   |
 | GET    | `/departments?expand=employee`  | Get departments with employee details   |
 
 ## 🛠️ How to Run
